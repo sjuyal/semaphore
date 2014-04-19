@@ -1,0 +1,52 @@
+Problem 1:
+
+Here I have created number of Hydrogen Threads given and made them wait on a semaphore "sem_hyd[index]" initialized to zero.
+Similarly created number of Oxygen Threads given and made them wait on a semaphore "sem_oxy[index]" initialized to zero.
+
+Now I have created threads for number of Sites given. Each one will wait on a semaphore "sem_site" which is initialized to the threshold. Thus only these many sites will be allowed to enter. And in case if two consecutive sites entered.One of them will immediately leave after checking the condition whether it is permissible for it to generate water or not.
+
+I have maintained an array "sitearray" to keep track of which sites are operating currently and updating the array elements require lock on "mutex". After checking the condition "sem_site" semaphore will be made up thereby allowing other sites to enter simultaneously.
+
+Now if permissible to create water on the site (by cheking the conditions), site will up the sem_hyd[index] semaphore and sem_oxy[index] semaphore. Thereby allowing two hydrogen and one oxygen thread to proceed further in their thread execution. At last the array will be updated again before making the "sem_site" semaphore up again.
+
+There wont be any deadlock as everysite will release the resource if the criteria is not satisfied.
+Also there wont be any starvation. Starvation here used to occur when a single site thread refuses to release CPU and hence water will be generated many time on that. But to make sure that doesnot happen, I have made the site thread wait for 1 milisecond which is enough for giving other threads a chance to proceed further.
+
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+
+Problem 2:
+
+Here I have created a single thread ("tg") for maintaining formation of Geek threads. Similarly other thread for maintaining formation of NonGeek threads ("tn") and other one for maintaining formation of Singer threads ("ts"). Inside these single threads I am creating GeekThreads NonGeekThreads and SingerThreads in a random time interval thereby emulating their arrival slowly and randomly.
+
+Each thread on creation will wait for their corresponding semaphore to be up (i.e sem_geek, sem_nongeek and sem_singer). In the main function I have created one thread which will maintain the boarding of people as an when they arrive. Here all the conditions will be checked which are permissible and if allowed counts of geeks, nongeeks and singers are getting updated and I am making the semaphore (i.e sem_geek, sem_nongeek and sem_singer) up on different people threads. Thus it will allow 4 permissible combination of people to enter the bridge. Now this main thread will wait on a semaphore "boarding".
+
+This semaphore "boarding" will be made up by individual person threads (described earlier) hence completing the transaction of people to travel across the bridge. 
+
+There wont be any starvation as all persons (geek,nongeek or singer) on arrival will surely get a chance. Also random time interval helps this cause further.
+
+Also there wont be any deadlock as all threads will surely terminate thereby allowing main function to join these threads later.
+
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+
+Problem 3:
+
+In this problem I have used four arrays to maintain information about courses,branches,groups and students.
+
+1) student_branch[] is a one dim array used for storing branch to which the student belongs. This will be randomaly generated.
+
+2) student_course[][8] is a two dim array to store the preference of a particular student. This again will be randomly generated. Also it will generate the random numbers uniquely.
+
+3) course_group[] is a one dim array used for storing group number to which the course belongs.
+
+4) course_branch[][4] is a two dim array used for storing how many students are allowed for a given course(row) and branch(column)
+
+I have created students threads which individually will check the course preference of the given student and will check whether that particular course has enough students remaining to accommodate the new student. Also it will check that course allocated to students must belong to different group. If conditions are satisfied student will be allocated the course. Otherwise student wont be allocated the group.
+
+There wont be any deadlock as all students will be checked by the student thread (ts[]). And it is ensured that mutex is released by every thread.
+
+Also there wont be any starvation as all threads are being given chance to execute. This is made sure by the semaphore (mutex).
+
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
